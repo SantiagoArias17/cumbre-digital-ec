@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block titulo %}Página no encontrada{% endblock %}
+
+{% block contenido %}
+  <section class="confirmacion">
+    <h2>Página no encontrada</h2>
+    <p class="bienvenida">La página o el número de registro que buscas no existe.</p>
+    <a href="{{ url_for('inicio') }}" class="boton">Ir al registro</a>
+  </section>
+{% endblock %}

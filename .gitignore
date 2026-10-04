@@ -1,0 +1,19 @@
+# Ambiente virtual de Python
+venv/
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Base de datos local (se crea sola al arrancar la app)
+evento.db
+
+# Configuración local de Claude Code y capturas de Playwright
+.claude/
+.playwright-mcp/
+
+# Registros
+*.log
+
+# Versión de Python local
+.python-version

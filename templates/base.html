@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Registro{% endblock %} · Cumbre Digital EC 2026</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+
+  <!-- Encabezado con el logo de texto del evento -->
+  <header>
+    <h1 class="logo">Cumbre Digital <span>EC 2026</span></h1>
+    <p class="subtitulo">Transformación digital para PyMEs</p>
+  </header>
+
+  <main class="tarjeta {% block clase_tarjeta %}{% endblock %}">
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer>© 2026 Cumbre Digital EC · Ecuador</footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block titulo %}Registro confirmado{% endblock %}
+
+{% block contenido %}
+  <!-- ===== Pantalla de confirmación ===== -->
+  <section class="confirmacion" aria-live="polite">
+    <div class="check" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24">
+        <path d="M5 12.5l4.5 4.5L19 7.5" stroke="var(--success)" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <h2>¡Registro confirmado!</h2>
+
+    <div class="numero-registro">{{ asistente.numero_registro }}</div>
+
+    <p class="etiqueta">Asistente</p>
+    <p class="nombre-asistente">{{ asistente.nombre }}</p>
+
+    <p class="bienvenida">
+      Te damos la bienvenida a <strong>Cumbre Digital EC 2026</strong>.
+      Prepárate para vivir una jornada de transformación digital en el área de
+      <strong>{{ asistente.area }}</strong>. ¡Nos vemos en el evento!
+    </p>
+
+    <a href="{{ url_for('inicio') }}" class="boton">Registrar a otra persona</a>
+  </section>
+{% endblock %}

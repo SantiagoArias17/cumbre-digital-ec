@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block titulo %}Panel de administración{% endblock %}
+
+{% block clase_tarjeta %}ancha{% endblock %}
+
+{% block contenido %}
+  <h2>Asistentes registrados</h2>
+  <p class="ayuda">Listado completo de inscripciones, de la más reciente a la más antigua.</p>
+
+  <!-- ===== Resumen: total y conteo por área ===== -->
+  <div class="resumen">
+    <div class="resumen-item">
+      <span class="valor">{{ asistentes|length }}</span>
+      <p class="etiqueta">Total</p>
+    </div>
+    {% for area, total in conteo.items() %}
+      <div class="resumen-item">
+        <span class="valor">{{ total }}</span>
+        <p class="etiqueta">{{ area }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- ===== Tabla de asistentes ===== -->
+  <div class="tabla-contenedor">
+    {% if asistentes %}
+      <table>
+        <thead>
+          <tr>
+            <th>N.º registro</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Empresa</th>
+            <th>Área</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in asistentes %}
+            <tr>
+              <td class="codigo">{{ a.numero_registro }}</td>
+              <td>{{ a.nombre }}</td>
+              <td>{{ a.email }}</td>
+              <td>{{ a.empresa }}</td>
+              <td>{{ a.area }}</td>
+              <td>{{ a.fecha_registro }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="vacio">Aún no hay asistentes registrados.</p>
+    {% endif %}
+  </div>
+
+  <a href="{{ url_for('inicio') }}" class="boton boton-secundario" style="margin-top: 24px;">Ir al formulario de registro</a>
+{% endblock %}

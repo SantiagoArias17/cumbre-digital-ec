@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block titulo %}Registro{% endblock %}
+
+{% block contenido %}
+  <!-- ===== Formulario de registro ===== -->
+  <section id="seccion-formulario">
+    <h2>Registro de asistentes</h2>
+    <p class="ayuda">Completa tus datos para reservar tu lugar. Todos los campos son obligatorios.</p>
+
+    {% if errores %}
+      <p class="aviso-error" role="alert">Revisa los campos marcados en rojo.</p>
+    {% endif %}
+
+    <form id="formulario" action="{{ url_for('registrar') }}" method="post" novalidate>
+      <div class="campo {% if errores.nombre %}invalido{% endif %}">
+        <label for="nombre">Nombre completo <span class="req">*</span></label>
+        <input type="text" id="nombre" name="nombre" value="{{ datos.nombre or '' }}" placeholder="Ej. María Fernanda López" autocomplete="name" aria-describedby="error-nombre" {% if errores.nombre %}aria-invalid="true"{% endif %}>
+        <p class="error" id="error-nombre" aria-live="polite">{{ errores.nombre or '' }}</p>
+      </div>
+
+      <div class="campo {% if errores.email %}invalido{% endif %}">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" name="email" value="{{ datos.email or '' }}" placeholder="tucorreo@ejemplo.com" autocomplete="email" aria-describedby="error-email" {% if errores.email %}aria-invalid="true"{% endif %}>
+        <p class="error" id="error-email" aria-live="polite">{{ errores.email or '' }}</p>
+      </div>
+
+      <div class="campo {% if errores.empresa %}invalido{% endif %}">
+        <label for="empresa">Empresa u organización <span class="req">*</span></label>
+        <input type="text" id="empresa" name="empresa" value="{{ datos.empresa or '' }}" placeholder="Ej. Innova PyME S.A." autocomplete="organization" aria-describedby="error-empresa" {% if errores.empresa %}aria-invalid="true"{% endif %}>
+        <p class="error" id="error-empresa" aria-live="polite">{{ errores.empresa or '' }}</p>
+      </div>
+
+      <div class="campo {% if errores.area %}invalido{% endif %}">
+        <label for="area">Área de interés <span class="req">*</span></label>
+        <!-- "required" solo se usa para el estilo :invalid del placeholder -->
+        <select id="area" name="area" required aria-describedby="error-area" {% if errores.area %}aria-invalid="true"{% endif %}>
+          <option value="" disabled {% if not datos.area %}selected{% endif %}>Selecciona un área</option>
+          {% for area in areas %}
+            <option value="{{ area }}" {% if datos.area == area %}selected{% endif %}>{{ area }}</option>
+          {% endfor %}
+        </select>
+        <p class="error" id="error-area" aria-live="polite">{{ errores.area or '' }}</p>
+      </div>
+
+      <button type="submit" class="boton" id="boton-enviar">Registrarme</button>
+    </form>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    // ===== Validación en el navegador (respuesta inmediata; el servidor vuelve a validar) =====
+    const formulario = document.getElementById('formulario');
+    const botonEnviar = document.getElementById('boton-enviar');
+
+    // Campos que se validan, en el orden en que aparecen
+    const campos = ['nombre', 'email', 'empresa', 'area'].map(id => document.getElementById(id));
+
+    // Expresión regular para validar el formato del email
+    const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    /**
+     * Valida un campo y devuelve el mensaje de error
+     * (cadena vacía si el campo es válido).
+     */
+    function validarCampo(campo) {
+      const valor = campo.value.trim();
+
+      switch (campo.id) {
+        case 'nombre':
+          if (!valor) return 'Por favor, ingresa tu nombre completo.';
+          if (valor.length < 3) return 'El nombre debe tener al menos 3 caracteres.';
+          return '';
+        case 'email':
+          if (!valor) return 'Por favor, ingresa tu email.';
+          if (!REGEX_EMAIL.test(valor)) return 'El email no tiene un formato válido (ej. nombre@dominio.com).';
+          return '';
+        case 'empresa':
+          if (!valor) return 'Por favor, ingresa tu empresa u organización.';
+          return '';
+        case 'area':
+          if (!valor) return 'Por favor, selecciona un área de interés.';
+          return '';
+        default:
+          return '';
+      }
+    }
+
+    // Muestra el mensaje de error debajo del campo y lo marca en rojo
+    function mostrarError(campo, mensaje) {
+      campo.closest('.campo').classList.add('invalido');
+      campo.setAttribute('aria-invalid', 'true');
+      document.getElementById('error-' + campo.id).textContent = mensaje;
+    }
+
+    // Quita el estado de error de un campo
+    function limpiarError(campo) {
+      campo.closest('.campo').classList.remove('invalido');
+      campo.removeAttribute('aria-invalid');
+      document.getElementById('error-' + campo.id).textContent = '';
+    }
+
+    // Limpia el error de cada campo en cuanto el usuario lo corrige
+    campos.forEach(campo => {
+      const evento = campo.tagName === 'SELECT' ? 'change' : 'input';
+      campo.addEventListener(evento, () => {
+        if (campo.closest('.campo').classList.contains('invalido') && !validarCampo(campo)) {
+          limpiarError(campo);
+        }
+      });
+    });
+
+    // ===== Envío del formulario =====
+    formulario.addEventListener('submit', (e) => {
+      let primerInvalido = null;
+
+      // Valida todos los campos y muestra los errores encontrados
+      campos.forEach(campo => {
+        const mensaje = validarCampo(campo);
+        if (mensaje) {
+          mostrarError(campo, mensaje);
+          if (!primerInvalido) primerInvalido = campo;
+        } else {
+          limpiarError(campo);
+        }
+      });
+
+      // Si hay errores, no se envía y se lleva el foco al primer campo inválido
+      if (primerInvalido) {
+        e.preventDefault();
+        primerInvalido.focus();
+        return;
+      }
+
+      // Todo válido: se envía al servidor (se desactiva el botón para evitar doble envío)
+      botonEnviar.disabled = true;
+      botonEnviar.textContent = 'Registrando…';
+    });
+
+    // Si el servidor devolvió errores, lleva el foco al primer campo marcado
+    const primerConError = document.querySelector('.campo.invalido input, .campo.invalido select');
+    if (primerConError) primerConError.focus();
+  </script>
+{% endblock %}

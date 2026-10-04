@@ -1,0 +1,376 @@
+/* ===== Variables de color y diseño ===== */
+:root {
+  --bg: #0a0e1a;
+  --surface: #121829;
+  --surface-2: #0e1322;
+  --border: #222b45;
+  --text: #e8ecf6;
+  --muted: #8a94b0;
+  --accent: #00a3ff;          /* Azul eléctrico */
+  --accent-strong: #33b5ff;
+  --accent-glow: rgba(0, 163, 255, 0.35);
+  --error: #ff4d6d;
+  --success: #2ee6a6;
+  --radius: 14px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== Reset básico ===== */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  background-color: var(--bg);
+  /* Degradado radial sutil en azul */
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0, 163, 255, 0.18), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(0, 163, 255, 0.08), transparent 70%);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 16px;
+  line-height: 1.5;
+}
+
+/* ===== Encabezado / logo ===== */
+header {
+  text-align: center;
+  margin-bottom: 32px;
+  animation: aparecer 0.6s ease both;
+}
+
+.logo {
+  margin: 0;
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.logo span {
+  color: var(--accent);
+  text-shadow: 0 0 18px var(--accent-glow);
+}
+
+.subtitulo {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ===== Tarjeta contenedora ===== */
+.tarjeta {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  animation: aparecer 0.6s 0.1s ease both;
+}
+
+.tarjeta h2 {
+  margin: 0 0 4px;
+  font-size: 1.3rem;
+}
+
+.tarjeta .ayuda {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ===== Campos del formulario ===== */
+.campo {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+label .req { color: var(--accent); }
+
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input::placeholder { color: #5a6382; }
+
+input:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Flecha personalizada del selector */
+select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a94b0' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+select:invalid { color: #5a6382; }
+select option { color: var(--text); background: var(--surface); }
+
+/* Estado de error */
+.campo.invalido input,
+.campo.invalido select {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.2);
+}
+
+.error {
+  min-height: 1.2em;
+  margin: 6px 0 0;
+  color: var(--error);
+  font-size: 0.82rem;
+}
+
+/* ===== Botones ===== */
+.boton {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #001829;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 24px var(--accent-glow);
+  transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+}
+
+.boton:hover {
+  background: var(--accent-strong);
+  box-shadow: 0 0 32px var(--accent-glow);
+}
+
+.boton:active { transform: scale(0.98); }
+
+.boton:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* ===== Pantalla de confirmación ===== */
+.confirmacion {
+  text-align: center;
+}
+
+.check {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(46, 230, 166, 0.12);
+  border: 2px solid var(--success);
+  animation: rebote 0.5s ease both;
+}
+
+.check svg path {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: trazar 0.4s 0.3s ease forwards;
+}
+
+.numero-registro {
+  display: inline-block;
+  margin: 16px 0;
+  padding: 10px 20px;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: var(--surface-2);
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+}
+
+.etiqueta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.nombre-asistente {
+  margin: 4px 0 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.bienvenida {
+  margin: 0 0 24px;
+  color: var(--muted);
+}
+
+.bienvenida strong { color: var(--text); }
+
+.oculto { display: none; }
+
+footer {
+  margin-top: 32px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ===== Animaciones ===== */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rebote {
+  0%   { transform: scale(0.4); opacity: 0; }
+  70%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes trazar {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Respeta la preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== Ajustes para móvil ===== */
+@media (max-width: 480px) {
+  body { padding: 32px 16px; }
+  .tarjeta { padding: 24px 20px; }
+}
+
+/* ===== Enlaces con aspecto de botón ===== */
+a.boton {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Botón secundario (contorno) */
+.boton-secundario {
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  box-shadow: none;
+}
+
+.boton-secundario:hover {
+  color: #001829;
+}
+
+/* Aviso general de error (p. ej. email duplicado) */
+.aviso-error {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  color: var(--error);
+  background: rgba(255, 77, 109, 0.08);
+  border: 1px solid rgba(255, 77, 109, 0.4);
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+/* ===== Panel de administración ===== */
+.tarjeta.ancha {
+  max-width: 1000px;
+}
+
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.resumen-item {
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.resumen-item .valor {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.resumen-item .etiqueta { font-size: 0.72rem; }
+
+/* La tabla se desplaza horizontalmente en pantallas pequeñas */
+.tabla-contenedor {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 12px 14px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--surface-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(0, 163, 255, 0.05); }
+
+td.codigo {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.vacio {
+  margin: 0;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+}
